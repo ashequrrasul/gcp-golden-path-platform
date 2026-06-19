@@ -75,6 +75,9 @@ externalSecrets:
   databasePasswordSecretName: golden-path-dev-database-password
 networkPolicy:
   enabled: true
+  gcpHealthCheckCidrs:
+    - 35.191.0.0/16
+    - 130.211.0.0/22
 serviceMonitor:
   enabled: false
   interval: 30s
