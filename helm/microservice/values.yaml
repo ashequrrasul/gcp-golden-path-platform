@@ -79,6 +79,6 @@ networkPolicy:
     - 35.191.0.0/16
     - 130.211.0.0/22
 serviceMonitor:
-  enabled: false
+  enabled: true
   interval: 30s
   scrapeTimeout: 10s

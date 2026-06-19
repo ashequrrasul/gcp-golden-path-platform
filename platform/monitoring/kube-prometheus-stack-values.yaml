@@ -5,6 +5,12 @@ grafana:
     userKey: admin-user
     passwordKey: admin-password
   defaultDashboardsEnabled: true
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway.logging.svc.cluster.local
+      isDefault: false
   sidecar:
     dashboards:
       enabled: true
@@ -12,23 +18,37 @@ grafana:
       enabled: true
   persistence:
     enabled: true
-    size: 10Gi
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
 
 prometheus:
   prometheusSpec:
-    retention: 15d
+    retention: 3d
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
     storageSpec:
       volumeClaimTemplate:
         spec:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 50Gi
+              storage: 10Gi
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
 
 alertmanager:
-  enabled: true
+  enabled: false
   alertmanagerSpec:
     storage:
       volumeClaimTemplate:

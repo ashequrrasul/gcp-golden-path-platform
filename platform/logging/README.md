@@ -1,6 +1,6 @@
 # Loki Logging Setup
 
-This template leaves logging installation as a platform concern because retention, storage, and tenant strategy vary by organization.
+This template installs a lightweight Loki and Promtail setup for the dev GKE cluster.
 
 Recommended install:
 
@@ -13,7 +13,7 @@ helm upgrade --install loki grafana/loki \
 
 helm upgrade --install promtail grafana/promtail \
   --namespace logging \
-  --set "config.clients[0].url=http://loki-gateway.logging.svc.cluster.local/loki/api/v1/push"
+  -f platform/logging/promtail-values.yaml
 ```
 
 Production notes:
