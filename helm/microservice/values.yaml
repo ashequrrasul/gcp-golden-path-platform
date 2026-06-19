@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/golden-path-microservice
-  tag: 48a861d2154a
+  tag: 995ba5d8b04c
   pullPolicy: IfNotPresent
 nameOverride: ""
 fullnameOverride: ""
