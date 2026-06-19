@@ -15,6 +15,12 @@ resource "google_project_iam_member" "gke_node_metrics" {
   member  = "serviceAccount:${google_service_account.gke_nodes.email}"
 }
 
+resource "google_project_iam_member" "gke_node_artifact_reader" {
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.gke_nodes.email}"
+}
+
 resource "google_service_account" "workload" {
   account_id   = "golden-path-workload"
   display_name = "Golden Path workload identity service account"
