@@ -1,13 +1,10 @@
 replicaCount: 1
-
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/ecommerce-frontend
-  tag: latest
+  tag: 4da96874bcac
   pullPolicy: IfNotPresent
-
 nameOverride: ecommerce-frontend
 fullnameOverride: ecommerce-frontend
-
 service:
   type: ClusterIP
   port: 80
@@ -15,7 +12,6 @@ service:
   annotations:
     cloud.google.com/backend-config: '{"default":"ecommerce-frontend-backend-config"}'
     cloud.google.com/neg: '{"ingress": true}'
-
 backendConfig:
   enabled: true
   name: ecommerce-frontend-backend-config
@@ -27,14 +23,12 @@ backendConfig:
     type: HTTP
     requestPath: /healthz
     port: 8080
-
 ingress:
   enabled: true
   host: gcp.lovelu.com
   staticIpName: golden-path-ip
   productServiceName: golden-path-microservice
   productServicePortName: http
-
 resources:
   requests:
     cpu: 50m
@@ -42,7 +36,6 @@ resources:
   limits:
     cpu: 250m
     memory: 256Mi
-
 autoscaling:
   enabled: true
   minReplicas: 1
