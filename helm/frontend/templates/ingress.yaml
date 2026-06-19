@@ -26,6 +26,27 @@ spec:
                 name: {{ .Values.ingress.productServiceName }}
                 port:
                   name: {{ .Values.ingress.productServicePortName }}
+          - path: /cart
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.cartPaymentServiceName }}
+                port:
+                  name: {{ .Values.ingress.cartPaymentServicePortName }}
+          - path: /checkout
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.cartPaymentServiceName }}
+                port:
+                  name: {{ .Values.ingress.cartPaymentServicePortName }}
+          - path: /payments
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.cartPaymentServiceName }}
+                port:
+                  name: {{ .Values.ingress.cartPaymentServicePortName }}
           - path: /
             pathType: Prefix
             backend:

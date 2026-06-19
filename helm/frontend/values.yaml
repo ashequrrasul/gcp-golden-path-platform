@@ -29,6 +29,8 @@ ingress:
   staticIpName: golden-path-ip
   productServiceName: golden-path-microservice
   productServicePortName: http
+  cartPaymentServiceName: cart-payment-service
+  cartPaymentServicePortName: http
 resources:
   requests:
     cpu: 50m

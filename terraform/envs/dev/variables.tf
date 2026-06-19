@@ -32,7 +32,8 @@ variable "github_repositories" {
   type        = list(string)
   default = [
     "ashequrrasul/gcp-golden-path-app",
-    "ashequrrasul/ecommerce-frontend"
+    "ashequrrasul/ecommerce-frontend",
+    "ashequrrasul/cart-payment-service"
   ]
 }
 
