@@ -42,7 +42,7 @@ backendConfig:
     requestPath: /healthz
     port: 8080
 ingress:
-  enabled: true
+  enabled: false
   className: ""
   annotations:
     kubernetes.io/ingress.class: gce
@@ -66,8 +66,12 @@ autoscaling:
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70
 env:
-  SERVICE_NAME: golden-path-microservice
+  SERVICE_NAME: ecommerce-api
   ENVIRONMENT: dev
+  DATABASE_HOST: "10.241.0.3"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: app
+  DATABASE_USER: app
 externalSecrets:
   enabled: true
   refreshInterval: 1h

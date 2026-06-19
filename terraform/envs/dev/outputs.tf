@@ -10,6 +10,10 @@ output "cloud_sql_connection_name" {
   value = var.enable_cloud_sql ? module.cloud_sql[0].connection_name : null
 }
 
+output "cloud_sql_private_ip_address" {
+  value = var.enable_cloud_sql ? module.cloud_sql[0].private_ip_address : null
+}
+
 output "workload_identity_service_account" {
   value = module.iam.workload_identity_service_account_email
 }

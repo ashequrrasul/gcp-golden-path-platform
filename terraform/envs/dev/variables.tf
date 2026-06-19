@@ -27,6 +27,15 @@ variable "github_repository" {
   default     = "ashequrrasul/gcp-golden-path-app"
 }
 
+variable "github_repositories" {
+  description = "GitHub repositories in owner/name format allowed to use GCP Workload Identity Federation."
+  type        = list(string)
+  default = [
+    "ashequrrasul/gcp-golden-path-app",
+    "ashequrrasul/ecommerce-frontend"
+  ]
+}
+
 variable "enable_cloud_sql" {
   description = "Create Cloud SQL PostgreSQL. Disable for free-tier/dev-cost mode."
   type        = bool

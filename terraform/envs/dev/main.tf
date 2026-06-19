@@ -17,11 +17,12 @@ module "artifact_registry" {
 }
 
 module "iam" {
-  source            = "../../modules/iam"
-  project_id        = var.project_id
-  github_repository = var.github_repository
-  namespace         = "golden-path"
-  ksa_name          = "golden-path-microservice"
+  source              = "../../modules/iam"
+  project_id          = var.project_id
+  github_repository   = var.github_repository
+  github_repositories = var.github_repositories
+  namespace           = "golden-path"
+  ksa_name            = "golden-path-microservice"
 }
 
 module "secret_manager" {

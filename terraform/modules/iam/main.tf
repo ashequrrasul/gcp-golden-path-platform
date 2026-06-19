@@ -1,3 +1,7 @@
+locals {
+  github_repositories = length(var.github_repositories) > 0 ? var.github_repositories : [var.github_repository]
+}
+
 resource "google_service_account" "gke_nodes" {
   account_id   = "golden-path-gke-nodes"
   display_name = "Golden Path GKE node service account"
@@ -67,7 +71,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.ref"        = "assertion.ref"
   }
 
-  attribute_condition = "attribute.repository == '${var.github_repository}'"
+  attribute_condition = "attribute.repository in ${jsonencode(local.github_repositories)}"
 
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
@@ -75,9 +79,11 @@ resource "google_iam_workload_identity_pool_provider" "github" {
 }
 
 resource "google_service_account_iam_member" "github_deployer_identity" {
+  for_each = toset(local.github_repositories)
+
   service_account_id = google_service_account.github_deployer.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_repository}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${each.value}"
 }
 
 resource "google_project_iam_member" "github_artifact_writer" {

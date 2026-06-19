@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.staticIpName }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /products
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.productServiceName }}
+                port:
+                  name: {{ .Values.ingress.productServicePortName }}
+          - path: /orders
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.productServiceName }}
+                port:
+                  name: {{ .Values.ingress.productServicePortName }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "frontend.fullname" . }}
+                port:
+                  name: http
+{{- end }}
