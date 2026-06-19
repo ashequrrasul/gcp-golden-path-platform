@@ -28,7 +28,19 @@ service:
   port: 80
   targetPort: 8080
   annotations:
+    cloud.google.com/backend-config: '{"default":"golden-path-backend-config"}'
     cloud.google.com/neg: '{"ingress": true}'
+backendConfig:
+  enabled: true
+  name: golden-path-backend-config
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
 ingress:
   enabled: true
   className: ""
