@@ -7,7 +7,7 @@ output "artifact_registry_repository" {
 }
 
 output "cloud_sql_connection_name" {
-  value = module.cloud_sql.connection_name
+  value = var.enable_cloud_sql ? module.cloud_sql[0].connection_name : null
 }
 
 output "workload_identity_service_account" {

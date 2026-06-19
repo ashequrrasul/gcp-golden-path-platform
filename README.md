@@ -65,6 +65,14 @@ gcp-golden-path-deploy   platform/devops owners
      -var="github_repository=ashequrrasul/gcp-golden-path-app"
    ```
 
+   The default GKE location is `us-central1-a`. That creates one dev node instead of one node per zone in a regional cluster.
+
+   Free-tier/dev-cost mode is the default and skips Cloud SQL. To create Cloud SQL later, add:
+
+   ```bash
+   -var="enable_cloud_sql=true"
+   ```
+
 4. Configure the app repo GitHub secrets from Terraform outputs:
 
    ```bash
@@ -76,7 +84,7 @@ gcp-golden-path-deploy   platform/devops owners
 
    ```bash
    gcloud container clusters get-credentials golden-path-dev \
-     --region us-central1 \
+     --zone us-central1-a \
      --project YOUR_PROJECT_ID
 
    kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
