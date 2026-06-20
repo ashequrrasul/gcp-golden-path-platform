@@ -33,3 +33,32 @@ http://localhost:3000
 ```
 
 The app chart creates a `ServiceMonitor` that scrapes `/metrics`.
+
+## E-commerce Dashboard and Alerts
+
+Install the dashboard and Prometheus alert rules:
+
+```bash
+kubectl apply -f platform/monitoring/ecommerce-dashboard.yaml
+kubectl apply -f platform/monitoring/ecommerce-prometheus-rules.yaml
+```
+
+If Grafana is already running, restart it so the sidecar picks up datasource UID changes:
+
+```bash
+kubectl -n monitoring rollout restart deploy/kube-prometheus-stack-grafana
+```
+
+Open Grafana and look for:
+
+```text
+Golden Path Ecommerce Overview
+```
+
+Check alert rules:
+
+```bash
+kubectl -n monitoring get prometheusrule ecommerce-observability-rules
+```
+
+Alertmanager is disabled in the dev values, so alerts are visible in Prometheus/Grafana but are not routed to email, Slack, or PagerDuty yet.

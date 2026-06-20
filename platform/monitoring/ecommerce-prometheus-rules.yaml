@@ -1,0 +1,65 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ecommerce-observability-rules
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: golden-path.ecommerce.availability
+      rules:
+        - alert: GoldenPathDeploymentUnavailable
+          expr: kube_deployment_status_replicas_available{namespace="golden-path"} < 1
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Deployment {{ $labels.deployment }} has no available replicas"
+            description: "Deployment {{ $labels.deployment }} in namespace golden-path has had fewer than one available replica for 5 minutes."
+
+        - alert: GoldenPathPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="golden-path"}[15m]) > 2
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Pod {{ $labels.pod }} is restarting"
+            description: "Pod {{ $labels.pod }} container {{ $labels.container }} restarted more than twice in 15 minutes."
+
+    - name: golden-path.ecommerce.http
+      rules:
+        - alert: ProductServiceHigh5xxRate
+          expr: sum(rate(http_requests_total{namespace="golden-path",job="golden-path-microservice",status=~"5.."}[5m])) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+            service: product-service
+            team: platform
+          annotations:
+            summary: "Product Service is returning 5xx responses"
+            description: "Product Service has a 5xx rate above 0.05 requests/second for 5 minutes."
+
+        - alert: CartPaymentServiceHigh5xxRate
+          expr: sum(rate(http_server_requests_seconds_count{namespace="golden-path",job="cart-payment-service",status=~"5.."}[5m])) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+            service: cart-payment-service
+            team: platform
+          annotations:
+            summary: "Cart/Payment Service is returning 5xx responses"
+            description: "Cart/Payment Service has a 5xx rate above 0.05 requests/second for 5 minutes."
+
+        - alert: OrderServiceHigh5xxRate
+          expr: sum(rate(http_requests_received_total{namespace="golden-path",job="order-service",code=~"5.."}[5m])) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+            service: order-service
+            team: platform
+          annotations:
+            summary: "Order Service is returning 5xx responses"
+            description: "Order Service has a 5xx rate above 0.05 requests/second for 5 minutes."
