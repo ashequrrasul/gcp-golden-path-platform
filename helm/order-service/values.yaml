@@ -1,0 +1,72 @@
+replicaCount: 1
+
+image:
+  repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/order-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: order-service
+fullnameOverride: order-service
+
+serviceAccount:
+  create: true
+  name: order-service
+  annotations:
+    iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+  annotations:
+    cloud.google.com/backend-config: '{"default":"order-service-backend-config"}'
+    cloud.google.com/neg: '{"ingress": true}'
+
+backendConfig:
+  enabled: true
+  name: order-service-backend-config
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+
+env:
+  DATABASE_HOST: "10.241.0.3"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: app
+  DATABASE_USER: app
+
+externalSecrets:
+  enabled: true
+  refreshInterval: 1h
+  secretStoreName: gcp-secret-store
+  databasePasswordSecretName: golden-path-dev-database-password
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+
+networkPolicy:
+  enabled: true
+  gcpHealthCheckCidrs:
+    - 35.191.0.0/16
+    - 130.211.0.0/22
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s

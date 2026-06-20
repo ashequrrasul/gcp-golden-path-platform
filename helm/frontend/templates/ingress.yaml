@@ -23,9 +23,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.ingress.productServiceName }}
+                name: {{ .Values.ingress.orderServiceName }}
                 port:
-                  name: {{ .Values.ingress.productServicePortName }}
+                  name: {{ .Values.ingress.orderServicePortName }}
           - path: /cart
             pathType: Prefix
             backend:

@@ -31,6 +31,8 @@ ingress:
   productServicePortName: http
   cartPaymentServiceName: cart-payment-service
   cartPaymentServicePortName: http
+  orderServiceName: order-service
+  orderServicePortName: http
 resources:
   requests:
     cpu: 50m

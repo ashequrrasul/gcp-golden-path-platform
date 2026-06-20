@@ -33,7 +33,8 @@ variable "github_repositories" {
   default = [
     "ashequrrasul/gcp-golden-path-app",
     "ashequrrasul/ecommerce-frontend",
-    "ashequrrasul/cart-payment-service"
+    "ashequrrasul/cart-payment-service",
+    "ashequrrasul/order-service"
   ]
 }
 
