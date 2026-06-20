@@ -1,24 +1,19 @@
 replicaCount: 1
-
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/cart-payment-service
-  tag: latest
+  tag: 2c9940168c48
   pullPolicy: IfNotPresent
-
 nameOverride: cart-payment-service
 fullnameOverride: cart-payment-service
-
 gcp:
   projectId: project-40d105bf-bb2b-4bf6-b9f
   region: us-central1-a
   clusterName: golden-path-dev
-
 serviceAccount:
   create: true
   name: cart-payment-service
   annotations:
     iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
-
 service:
   type: ClusterIP
   port: 80
@@ -26,7 +21,6 @@ service:
   annotations:
     cloud.google.com/backend-config: '{"default":"cart-payment-backend-config"}'
     cloud.google.com/neg: '{"ingress": true}'
-
 backendConfig:
   enabled: true
   name: cart-payment-backend-config
@@ -38,19 +32,16 @@ backendConfig:
     type: HTTP
     requestPath: /healthz
     port: 8080
-
 env:
   DATABASE_HOST: "10.241.0.3"
   DATABASE_PORT: "5432"
   DATABASE_NAME: app
   DATABASE_USER: app
-
 externalSecrets:
   enabled: true
   refreshInterval: 1h
   secretStoreName: gcp-secret-store
   databasePasswordSecretName: golden-path-dev-database-password
-
 resources:
   requests:
     cpu: 150m
@@ -58,19 +49,16 @@ resources:
   limits:
     cpu: 750m
     memory: 768Mi
-
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70
-
 networkPolicy:
   enabled: true
   gcpHealthCheckCidrs:
     - 35.191.0.0/16
     - 130.211.0.0/22
-
 serviceMonitor:
   enabled: true
   interval: 30s
