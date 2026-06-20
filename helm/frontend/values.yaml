@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/ecommerce-frontend
-  tag: a982d02b94e0
+  tag: 5a272ad14d53
   pullPolicy: IfNotPresent
 nameOverride: ecommerce-frontend
 fullnameOverride: ecommerce-frontend
