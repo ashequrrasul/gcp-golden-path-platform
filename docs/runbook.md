@@ -33,3 +33,42 @@ kubectl -n golden-path rollout restart deploy/golden-path-microservice
 ```bash
 kubectl -n golden-path get events --sort-by=.lastTimestamp
 ```
+
+## Verify Managed TLS
+
+The shared ecommerce ingress uses a GKE `ManagedCertificate` for `gcp.lovelu.com`.
+
+Check certificate provisioning:
+
+```bash
+kubectl -n golden-path describe managedcertificate ecommerce-managed-cert
+```
+
+Expected status after Google provisions the certificate:
+
+```text
+CertificateStatus: Active
+DomainStatus:
+  gcp.lovelu.com: Active
+```
+
+Check the ingress annotations and load balancer IP:
+
+```bash
+kubectl -n golden-path describe ingress ecommerce
+```
+
+Confirm DNS points to the reserved global IP:
+
+```bash
+gcloud compute addresses describe golden-path-ip --global --format="value(address)"
+```
+
+Then test HTTPS:
+
+```bash
+curl -I https://gcp.lovelu.com
+curl -I http://gcp.lovelu.com
+```
+
+The HTTP request should redirect to HTTPS after the `FrontendConfig` is active. Managed certificates can take 15-60 minutes to become active.

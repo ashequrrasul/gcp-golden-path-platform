@@ -27,6 +27,16 @@ ingress:
   enabled: true
   host: gcp.lovelu.com
   staticIpName: golden-path-ip
+  allowHttp: true
+  managedCertificate:
+    enabled: true
+    name: ecommerce-managed-cert
+  frontendConfig:
+    enabled: true
+    name: ecommerce-frontend-config
+    redirectToHttps:
+      enabled: true
+      responseCodeName: MOVED_PERMANENTLY_DEFAULT
   productServiceName: golden-path-microservice
   productServicePortName: http
   cartPaymentServiceName: cart-payment-service

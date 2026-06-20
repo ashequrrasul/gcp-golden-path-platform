@@ -1,0 +1,13 @@
+{{- if and .Values.ingress.enabled .Values.ingress.frontendConfig.enabled -}}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ .Values.ingress.frontendConfig.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "frontend.labels" . | nindent 4 }}
+spec:
+  redirectToHttps:
+    enabled: {{ .Values.ingress.frontendConfig.redirectToHttps.enabled }}
+    responseCodeName: {{ .Values.ingress.frontendConfig.redirectToHttps.responseCodeName }}
+{{- end }}
