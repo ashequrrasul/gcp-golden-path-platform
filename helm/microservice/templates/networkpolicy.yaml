@@ -37,6 +37,13 @@ spec:
           port: 15021
         - protocol: TCP
           port: 15090
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.networkPolicy.monitoringNamespace }}
+      ports:
+        - protocol: TCP
+          port: 15090
   egress:
     - to:
         - namespaceSelector:
