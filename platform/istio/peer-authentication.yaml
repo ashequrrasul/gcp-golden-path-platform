@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: golden-path-permissive-mtls
+  namespace: golden-path
+spec:
+  mtls:
+    mode: PERMISSIVE
