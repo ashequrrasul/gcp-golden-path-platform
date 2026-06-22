@@ -69,18 +69,6 @@ spec:
         - protocol: TCP
           port: 15014
     - to:
-        {{- range .Values.networkPolicy.istioControlPlaneCidrs }}
-        - ipBlock:
-            cidr: {{ . }}
-        {{- end }}
-      ports:
-        - protocol: TCP
-          port: 15012
-        - protocol: TCP
-          port: 15017
-        - protocol: TCP
-          port: 15014
-    - to:
         - ipBlock:
             cidr: 0.0.0.0/0
       ports:
