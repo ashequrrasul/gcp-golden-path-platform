@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-sidecars
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames:
+      - golden-path
+  selector:
+    matchExpressions:
+      - key: security.istio.io/tlsMode
+        operator: Exists
+  podMetricsEndpoints:
+    - path: /stats/prometheus
+      targetPort: 15020
+      interval: 30s
+      scrapeTimeout: 10s
+      relabelings:
+        - action: keep
+          sourceLabels:
+            - __meta_kubernetes_pod_container_name
+          regex: istio-proxy

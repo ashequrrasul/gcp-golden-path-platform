@@ -41,6 +41,7 @@ Install the dashboard and Prometheus alert rules:
 ```bash
 kubectl apply -f platform/monitoring/ecommerce-dashboard.yaml
 kubectl apply -f platform/monitoring/ecommerce-prometheus-rules.yaml
+kubectl apply -f platform/monitoring/istio-sidecar-podmonitor.yaml
 ```
 
 If Grafana is already running, restart it so the sidecar picks up datasource UID changes:
@@ -59,6 +60,18 @@ Check alert rules:
 
 ```bash
 kubectl -n monitoring get prometheusrule ecommerce-observability-rules
+```
+
+Check Istio metrics:
+
+```bash
+kubectl -n monitoring get podmonitor istio-sidecars
+```
+
+Then query Prometheus:
+
+```promql
+sum by (source_workload, destination_workload) (rate(istio_requests_total{destination_workload_namespace="golden-path"}[5m]))
 ```
 
 Alertmanager is disabled in the dev values, so alerts are visible in Prometheus/Grafana but are not routed to email, Slack, or PagerDuty yet.
