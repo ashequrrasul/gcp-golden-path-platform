@@ -4,3 +4,4 @@ metadata:
   name: {{ .Release.Namespace }}
   labels:
     name: {{ .Release.Namespace }}
+    istio-injection: enabled
