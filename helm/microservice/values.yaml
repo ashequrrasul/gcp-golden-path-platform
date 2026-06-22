@@ -85,6 +85,9 @@ networkPolicy:
   istioSystemNamespace: istio-system
   nodeCidrs:
     - 10.10.0.0/20
+  istioControlPlaneCidrs:
+    - 10.20.0.0/16
+    - 10.30.0.0/20
 serviceMonitor:
   enabled: true
   interval: 30s
