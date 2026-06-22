@@ -48,6 +48,16 @@ spec:
         - protocol: TCP
           port: 53
     - to:
+        {{- range .Values.networkPolicy.dnsCidrs }}
+        - ipBlock:
+            cidr: {{ . }}
+        {{- end }}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Values.networkPolicy.istioSystemNamespace }}

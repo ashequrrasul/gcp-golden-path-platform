@@ -61,6 +61,9 @@ networkPolicy:
   istioControlPlaneCidrs:
     - 10.20.0.0/16
     - 10.30.0.0/20
+  dnsCidrs:
+    - 10.20.0.0/16
+    - 10.30.0.0/20
 serviceMonitor:
   enabled: true
   interval: 30s
