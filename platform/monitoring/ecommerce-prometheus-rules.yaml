@@ -32,7 +32,7 @@ spec:
     - name: golden-path.ecommerce.http
       rules:
         - alert: ProductServiceHigh5xxRate
-          expr: sum(rate(http_requests_total{namespace="golden-path",job="golden-path-microservice",status=~"5.."}[5m])) > 0.05
+          expr: sum(rate(http_requests_total{namespace="golden-path",job="product-service",status=~"5.."}[5m])) > 0.05
           for: 5m
           labels:
             severity: warning

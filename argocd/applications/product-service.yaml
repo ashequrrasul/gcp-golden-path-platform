@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: golden-path-microservice
+  name: product-service
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/ashequrrasul/gcp-golden-path-deploy.git
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: helm/microservice
+    path: apps/product-service
     helm:
-      releaseName: golden-path-microservice
+      releaseName: product-service
       valueFiles:
         - values.yaml
   destination:

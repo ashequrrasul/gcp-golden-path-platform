@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "microservice.fullname" . }}
+  name: {{ include "product-service.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "microservice.labels" . | nindent 4 }}
+    {{- include "product-service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "microservice.selectorLabels" . | nindent 6 }}
+      {{- include "product-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "microservice.selectorLabels" . | nindent 8 }}
+        {{- include "product-service.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       securityContext:
@@ -33,7 +33,7 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: golden-path-db
+                  name: product-db
                   key: password
           livenessProbe:
             httpGet:

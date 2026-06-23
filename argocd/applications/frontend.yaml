@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ashequrrasul/gcp-golden-path-deploy.git
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: helm/frontend
+    path: apps/frontend
     helm:
       releaseName: ecommerce-frontend
       valueFiles:

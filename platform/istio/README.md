@@ -25,7 +25,9 @@ Apply the namespace label and mesh resources:
 ```bash
 kubectl apply -f platform/istio/golden-path-namespace-label.yaml
 kubectl apply -f platform/istio/peer-authentication.yaml
-kubectl apply -f platform/istio/destination-rules.yaml
+kubectl apply -f platform/istio/destination-rule-product-service.yaml
+kubectl apply -f platform/istio/destination-rule-cart-payment-service.yaml
+kubectl apply -f platform/istio/destination-rule-order-service.yaml
 kubectl apply -f platform/istio/telemetry.yaml
 ```
 
@@ -33,7 +35,7 @@ Restart workloads so pods receive sidecars:
 
 ```bash
 kubectl -n golden-path rollout restart deploy/ecommerce-frontend
-kubectl -n golden-path rollout restart deploy/golden-path-microservice
+kubectl -n golden-path rollout restart deploy/product-service
 kubectl -n golden-path rollout restart deploy/cart-payment-service
 kubectl -n golden-path rollout restart deploy/order-service
 ```

@@ -2,15 +2,15 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "microservice.fullname" . }}
+  name: {{ include "product-service.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     release: kube-prometheus-stack
-    {{- include "microservice.labels" . | nindent 4 }}
+    {{- include "product-service.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "microservice.selectorLabels" . | nindent 6 }}
+      {{- include "product-service.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: http
       path: /metrics

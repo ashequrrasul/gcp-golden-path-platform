@@ -22,7 +22,7 @@ module "iam" {
   github_repository   = var.github_repository
   github_repositories = var.github_repositories
   namespace           = "golden-path"
-  ksa_name            = "golden-path-microservice"
+  ksa_name            = "product-service"
 }
 
 module "secret_manager" {
@@ -61,4 +61,20 @@ module "gke" {
   max_node_count                = 4
   master_authorized_cidr_blocks = var.master_authorized_cidr_blocks
   deletion_protection           = var.gke_deletion_protection
+}
+
+module "platform_addons" {
+  count = var.enable_platform_addons ? 1 : 0
+
+  source                 = "../../modules/platform-addons"
+  repo_root              = abspath("${path.module}/../../..")
+  grafana_admin_user     = var.grafana_admin_user
+  grafana_admin_password = var.grafana_admin_password
+  install_logging        = var.install_logging
+  install_istio          = var.install_istio
+
+  depends_on = [
+    module.gke,
+    module.cloud_sql,
+  ]
 }

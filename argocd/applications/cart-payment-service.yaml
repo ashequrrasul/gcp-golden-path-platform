@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ashequrrasul/gcp-golden-path-deploy.git
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: helm/cart-payment-service
+    path: apps/cart-payment-service
     helm:
       releaseName: cart-payment-service
       valueFiles:

@@ -37,7 +37,7 @@ ingress:
     redirectToHttps:
       enabled: true
       responseCodeName: MOVED_PERMANENTLY_DEFAULT
-  productServiceName: golden-path-microservice
+  productServiceName: product-service
   productServicePortName: http
   cartPaymentServiceName: cart-payment-service
   cartPaymentServicePortName: http

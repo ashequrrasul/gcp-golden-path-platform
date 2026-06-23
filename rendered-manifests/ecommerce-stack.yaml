@@ -1,0 +1,1052 @@
+# Rendered Kubernetes manifest snapshot for the current dev e-commerce stack.
+# Generated from the Helm values in this repository. Helm charts remain the source of truth.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: golden-path
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ecommerce-managed-cert
+  namespace: golden-path
+  labels:
+    helm.sh/chart: ecommerce-frontend-0.1.0
+    app.kubernetes.io/name: ecommerce-frontend
+    app.kubernetes.io/instance: ecommerce-frontend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  domains:
+    - gcp.lovelu.com
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: ecommerce-frontend-config
+  namespace: golden-path
+  labels:
+    helm.sh/chart: ecommerce-frontend-0.1.0
+    app.kubernetes.io/name: ecommerce-frontend
+    app.kubernetes.io/instance: ecommerce-frontend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ecommerce-frontend-backend-config
+  namespace: golden-path
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: product-service-backend-config
+  namespace: golden-path
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: cart-payment-backend-config
+  namespace: golden-path
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: order-service-backend-config
+  namespace: golden-path
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+---
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: gcp-secret-store
+  namespace: golden-path
+spec:
+  provider:
+    gcpsm:
+      projectID: project-40d105bf-bb2b-4bf6-b9f
+      auth:
+        workloadIdentity:
+          clusterLocation: us-central1-a
+          clusterName: golden-path-dev
+          serviceAccountRef:
+            name: product-service
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: product-db
+  namespace: golden-path
+  labels:
+    helm.sh/chart: product-service-0.1.0
+    app.kubernetes.io/name: product-service
+    app.kubernetes.io/instance: product-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: product-db
+    creationPolicy: Owner
+    deletionPolicy: Retain
+  data:
+    - secretKey: password
+      remoteRef:
+        key: golden-path-dev-database-password
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        nullBytePolicy: Ignore
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cart-payment-db
+  namespace: golden-path
+  labels:
+    helm.sh/chart: cart-payment-service-0.1.0
+    app.kubernetes.io/name: cart-payment-service
+    app.kubernetes.io/instance: cart-payment-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: cart-payment-db
+    creationPolicy: Owner
+    deletionPolicy: Retain
+  data:
+    - secretKey: password
+      remoteRef:
+        key: golden-path-dev-database-password
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        nullBytePolicy: Ignore
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: order-db
+  namespace: golden-path
+  labels:
+    helm.sh/chart: order-service-0.1.0
+    app.kubernetes.io/name: order-service
+    app.kubernetes.io/instance: order-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: order-db
+    creationPolicy: Owner
+    deletionPolicy: Retain
+  data:
+    - secretKey: password
+      remoteRef:
+        key: golden-path-dev-database-password
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+        nullBytePolicy: Ignore
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: product-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: product-service-0.1.0
+    app.kubernetes.io/name: product-service
+    app.kubernetes.io/instance: product-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: cart-payment-service-0.1.0
+    app.kubernetes.io/name: cart-payment-service
+    app.kubernetes.io/instance: cart-payment-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: order-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: order-service-0.1.0
+    app.kubernetes.io/name: order-service
+    app.kubernetes.io/instance: order-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-frontend
+  namespace: golden-path
+  labels:
+    app.kubernetes.io/name: ecommerce-frontend
+    app.kubernetes.io/instance: ecommerce-frontend
+  annotations:
+    cloud.google.com/backend-config: '{"default":"ecommerce-frontend-backend-config"}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: ecommerce-frontend
+    app.kubernetes.io/instance: ecommerce-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+  namespace: golden-path
+  labels:
+    app.kubernetes.io/name: product-service
+    app.kubernetes.io/instance: product-service
+  annotations:
+    cloud.google.com/backend-config: '{"default":"product-service-backend-config"}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: product-service
+    app.kubernetes.io/instance: product-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+  labels:
+    app.kubernetes.io/name: cart-payment-service
+    app.kubernetes.io/instance: cart-payment-service
+  annotations:
+    cloud.google.com/backend-config: '{"default":"cart-payment-backend-config"}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: cart-payment-service
+    app.kubernetes.io/instance: cart-payment-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: golden-path
+  labels:
+    app.kubernetes.io/name: order-service
+    app.kubernetes.io/instance: order-service
+  annotations:
+    cloud.google.com/backend-config: '{"default":"order-service-backend-config"}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: order-service
+    app.kubernetes.io/instance: order-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-frontend
+  namespace: golden-path
+  labels:
+    helm.sh/chart: ecommerce-frontend-0.1.0
+    app.kubernetes.io/name: ecommerce-frontend
+    app.kubernetes.io/instance: ecommerce-frontend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ecommerce-frontend
+      app.kubernetes.io/instance: ecommerce-frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ecommerce-frontend
+        app.kubernetes.io/instance: ecommerce-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/ecommerce-frontend:5a272ad14d53
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: product-service-0.1.0
+    app.kubernetes.io/name: product-service
+    app.kubernetes.io/instance: product-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: product-service
+      app.kubernetes.io/instance: product-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: product-service
+        app.kubernetes.io/instance: product-service
+    spec:
+      serviceAccountName: product-service
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: app
+          image: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/product-service:7cde54516615
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: SERVICE_NAME
+              value: ecommerce-api
+            - name: ENVIRONMENT
+              value: dev
+            - name: DATABASE_HOST
+              value: "10.241.0.3"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: app
+            - name: DATABASE_USER
+              value: app
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: product-db
+                  key: password
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: cart-payment-service-0.1.0
+    app.kubernetes.io/name: cart-payment-service
+    app.kubernetes.io/instance: cart-payment-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cart-payment-service
+      app.kubernetes.io/instance: cart-payment-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cart-payment-service
+        app.kubernetes.io/instance: cart-payment-service
+    spec:
+      serviceAccountName: cart-payment-service
+      containers:
+        - name: app
+          image: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/cart-payment-service:2c9940168c48
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATABASE_HOST
+              value: "10.241.0.3"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: app
+            - name: DATABASE_USER
+              value: app
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cart-payment-db
+                  key: password
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 18
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 45
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 150m
+              memory: 384Mi
+            limits:
+              cpu: 750m
+              memory: 768Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: golden-path
+  labels:
+    helm.sh/chart: order-service-0.1.0
+    app.kubernetes.io/name: order-service
+    app.kubernetes.io/instance: order-service
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-service
+      app.kubernetes.io/instance: order-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-service
+        app.kubernetes.io/instance: order-service
+    spec:
+      serviceAccountName: order-service
+      containers:
+        - name: app
+          image: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/order-service:dbaeb9db5faa
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATABASE_HOST
+              value: "10.241.0.3"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: app
+            - name: DATABASE_USER
+              value: app
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-db
+                  key: password
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 18
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ecommerce-frontend
+  namespace: golden-path
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ecommerce-frontend
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product-service
+  namespace: golden-path
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: product-service
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cart-payment-service
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: order-service
+  namespace: golden-path
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: order-service
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: product-service
+  namespace: golden-path
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: product-service
+      app.kubernetes.io/instance: product-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - ipBlock:
+            cidr: 35.191.0.0/16
+        - ipBlock:
+            cidr: 130.211.0.0/22
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cart-payment-service
+      app.kubernetes.io/instance: cart-payment-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - ipBlock:
+            cidr: 35.191.0.0/16
+        - ipBlock:
+            cidr: 130.211.0.0/22
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: order-service
+  namespace: golden-path
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: order-service
+      app.kubernetes.io/instance: order-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - ipBlock:
+            cidr: 35.191.0.0/16
+        - ipBlock:
+            cidr: 130.211.0.0/22
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: product-service
+  namespace: golden-path
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: product-service
+      app.kubernetes.io/instance: product-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cart-payment-service
+  namespace: golden-path
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cart-payment-service
+      app.kubernetes.io/instance: cart-payment-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: order-service
+  namespace: golden-path
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-service
+      app.kubernetes.io/instance: order-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce
+  namespace: golden-path
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: golden-path-ip
+    kubernetes.io/ingress.allow-http: "true"
+    networking.gke.io/managed-certificates: ecommerce-managed-cert
+    networking.gke.io/v1beta1.FrontendConfig: ecommerce-frontend-config
+spec:
+  rules:
+    - host: gcp.lovelu.com
+      http:
+        paths:
+          - path: /products
+            pathType: Prefix
+            backend:
+              service:
+                name: product-service
+                port:
+                  name: http
+          - path: /orders
+            pathType: Prefix
+            backend:
+              service:
+                name: order-service
+                port:
+                  name: http
+          - path: /cart
+            pathType: Prefix
+            backend:
+              service:
+                name: cart-payment-service
+                port:
+                  name: http
+          - path: /checkout
+            pathType: Prefix
+            backend:
+              service:
+                name: cart-payment-service
+                port:
+                  name: http
+          - path: /payments
+            pathType: Prefix
+            backend:
+              service:
+                name: cart-payment-service
+                port:
+                  name: http
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ecommerce-frontend
+                port:
+                  name: http
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecommerce-frontend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
+    targetRevision: main
+    path: apps/frontend
+    helm:
+      releaseName: ecommerce-frontend
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: golden-path
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: product-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
+    targetRevision: main
+    path: apps/product-service
+    helm:
+      releaseName: product-service
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: golden-path
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cart-payment-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
+    targetRevision: main
+    path: apps/cart-payment-service
+    helm:
+      releaseName: cart-payment-service
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: golden-path
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: order-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
+    targetRevision: main
+    path: apps/order-service
+    helm:
+      releaseName: order-service
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: golden-path
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

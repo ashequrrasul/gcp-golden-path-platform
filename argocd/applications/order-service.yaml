@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ashequrrasul/gcp-golden-path-deploy.git
+    repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: helm/order-service
+    path: apps/order-service
     helm:
       releaseName: order-service
       valueFiles:

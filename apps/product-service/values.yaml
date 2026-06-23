@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/golden-path-microservice
+  repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/product-service
   tag: 7cde54516615
   pullPolicy: IfNotPresent
 nameOverride: ""
@@ -11,7 +11,7 @@ gcp:
   clusterName: golden-path-dev
 serviceAccount:
   create: true
-  name: golden-path-microservice
+  name: product-service
   annotations:
     iam.gke.io/gcp-service-account: golden-path-workload@project-40d105bf-bb2b-4bf6-b9f.iam.gserviceaccount.com
 podSecurityContext:
@@ -28,11 +28,11 @@ service:
   port: 80
   targetPort: 8080
   annotations:
-    cloud.google.com/backend-config: '{"default":"golden-path-backend-config"}'
+    cloud.google.com/backend-config: '{"default":"product-service-backend-config"}'
     cloud.google.com/neg: '{"ingress": true}'
 backendConfig:
   enabled: true
-  name: golden-path-backend-config
+  name: product-service-backend-config
   healthCheck:
     checkIntervalSec: 15
     timeoutSec: 5

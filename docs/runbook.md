@@ -3,7 +3,7 @@
 ## Roll Back a Deployment
 
 ```bash
-argocd app rollback golden-path-microservice
+argocd app rollback product-service
 ```
 
 Or revert the Helm image tag commit and allow ArgoCD to sync.
@@ -14,13 +14,13 @@ Or revert the Helm image tag commit and allow ArgoCD to sync.
 2. Wait for External Secrets Operator refresh or force sync:
 
 ```bash
-kubectl -n golden-path annotate externalsecret golden-path-db force-sync=$(date +%s) --overwrite
+kubectl -n golden-path annotate externalsecret product-db force-sync=$(date +%s) --overwrite
 ```
 
 3. Restart pods if the application only reads secrets on startup:
 
 ```bash
-kubectl -n golden-path rollout restart deploy/golden-path-microservice
+kubectl -n golden-path rollout restart deploy/product-service
 ```
 
 ## Investigate Elevated Error Rates

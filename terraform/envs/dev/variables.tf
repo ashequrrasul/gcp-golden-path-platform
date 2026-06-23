@@ -24,17 +24,17 @@ variable "environment" {
 variable "github_repository" {
   description = "GitHub repository in owner/name format for deployer identity."
   type        = string
-  default     = "ashequrrasul/gcp-golden-path-app"
+  default     = "ashequrrasul/ecommerce-product-service"
 }
 
 variable "github_repositories" {
   description = "GitHub repositories in owner/name format allowed to use GCP Workload Identity Federation."
   type        = list(string)
   default = [
-    "ashequrrasul/gcp-golden-path-app",
+    "ashequrrasul/ecommerce-product-service",
     "ashequrrasul/ecommerce-frontend",
-    "ashequrrasul/cart-payment-service",
-    "ashequrrasul/order-service"
+    "ashequrrasul/ecommerce-cart-payment-service",
+    "ashequrrasul/ecommerce-order-service"
   ]
 }
 
@@ -57,4 +57,35 @@ variable "gke_deletion_protection" {
   description = "Protect the GKE cluster from Terraform destroy. Disable only for disposable dev clusters."
   type        = bool
   default     = false
+}
+
+variable "enable_platform_addons" {
+  description = "Install in-cluster platform add-ons with Terraform: External Secrets, ArgoCD, monitoring, logging, Istio, and ArgoCD Applications."
+  type        = bool
+  default     = false
+}
+
+variable "install_logging" {
+  description = "Install Loki and Promtail when platform add-ons are enabled."
+  type        = bool
+  default     = true
+}
+
+variable "install_istio" {
+  description = "Install Istio when platform add-ons are enabled."
+  type        = bool
+  default     = true
+}
+
+variable "grafana_admin_user" {
+  description = "Grafana admin user when platform add-ons are enabled."
+  type        = string
+  default     = "admin"
+}
+
+variable "grafana_admin_password" {
+  description = "Grafana admin password when platform add-ons are enabled."
+  type        = string
+  sensitive   = true
+  default     = "ChangeMe123!"
 }

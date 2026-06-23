@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "microservice.fullname" . }}
+  name: {{ include "product-service.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "microservice.labels" . | nindent 4 }}
+    {{- include "product-service.labels" . | nindent 4 }}
   annotations:
     {{- toYaml .Values.ingress.annotations | nindent 4 }}
 spec:
@@ -26,7 +26,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "microservice.fullname" $ }}
+                name: {{ include "product-service.fullname" $ }}
                 port:
                   name: http
           {{- end }}
