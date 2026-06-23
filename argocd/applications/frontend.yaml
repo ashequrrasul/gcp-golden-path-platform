@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: apps/frontend
+    path: helm-charts/frontend
     helm:
       releaseName: ecommerce-frontend
       valueFiles:

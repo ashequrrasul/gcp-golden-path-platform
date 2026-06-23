@@ -67,7 +67,7 @@ Detailed architecture notes live in [docs/architecture.md](docs/architecture.md)
 .
 ├── argocd/                 # ArgoCD Application definitions
 ├── docs/                   # Architecture and operations documentation
-├── apps/                   # Service Helm charts and environment values
+├── helm-charts/            # Service Helm charts and environment values
 ├── platform/               # Monitoring, logging, and Istio platform manifests
 ├── rendered-manifests/     # Rendered Kubernetes manifest snapshot
 └── terraform/              # GCP infrastructure and platform add-on modules

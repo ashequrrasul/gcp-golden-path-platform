@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/ashequrrasul/gcp-golden-path-platform.git
     targetRevision: main
-    path: apps/order-service
+    path: helm-charts/order-service
     helm:
       releaseName: order-service
       valueFiles:

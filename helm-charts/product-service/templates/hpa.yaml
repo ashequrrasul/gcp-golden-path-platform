@@ -2,13 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "frontend.fullname" . }}
+  name: {{ include "product-service.fullname" . }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "product-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
+    apiVersion: helm-charts/v1
     kind: Deployment
-    name: {{ include "frontend.fullname" . }}
+    name: {{ include "product-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

@@ -1,19 +1,19 @@
-apiVersion: apps/v1
+apiVersion: helm-charts/v1
 kind: Deployment
 metadata:
-  name: {{ include "cart.fullname" . }}
+  name: {{ include "order.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "cart.labels" . | nindent 4 }}
+    {{- include "order.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "cart.selectorLabels" . | nindent 6 }}
+      {{- include "order.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "cart.selectorLabels" . | nindent 8 }}
+        {{- include "order.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
@@ -31,24 +31,8 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cart-payment-db
+                  name: order-db
                   key: password
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 45
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /actuator/health/readiness
-              port: http
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 6
           startupProbe:
             httpGet:
               path: /healthz
@@ -56,5 +40,19 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 18
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
