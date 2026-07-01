@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/cart-payment-service
-  tag: 2c9940168c48
+  tag: 6bd051a862f3
   pullPolicy: IfNotPresent
 nameOverride: cart-payment-service
 fullnameOverride: cart-payment-service
