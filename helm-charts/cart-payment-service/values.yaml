@@ -7,7 +7,7 @@ nameOverride: cart-payment-service
 fullnameOverride: cart-payment-service
 gcp:
   projectId: project-40d105bf-bb2b-4bf6-b9f
-  region: us-central1-a
+  region: us-central1-f
   clusterName: golden-path-dev
 serviceAccount:
   create: true
@@ -33,7 +33,7 @@ backendConfig:
     requestPath: /healthz
     port: 8080
 env:
-  DATABASE_HOST: "10.241.0.3"
+  DATABASE_HOST: "10.248.0.3"
   DATABASE_PORT: "5432"
   DATABASE_NAME: app
   DATABASE_USER: app

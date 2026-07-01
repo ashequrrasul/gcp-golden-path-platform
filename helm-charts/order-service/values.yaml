@@ -29,7 +29,7 @@ backendConfig:
     requestPath: /healthz
     port: 8080
 env:
-  DATABASE_HOST: "10.241.0.3"
+  DATABASE_HOST: "10.248.0.3"
   DATABASE_PORT: "5432"
   DATABASE_NAME: app
   DATABASE_USER: app

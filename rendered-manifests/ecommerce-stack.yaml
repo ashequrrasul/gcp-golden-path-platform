@@ -108,7 +108,7 @@ spec:
       projectID: project-40d105bf-bb2b-4bf6-b9f
       auth:
         workloadIdentity:
-          clusterLocation: us-central1-a
+          clusterLocation: us-central1-f
           clusterName: golden-path-dev
           serviceAccountRef:
             name: product-service
@@ -420,7 +420,7 @@ spec:
             - name: ENVIRONMENT
               value: dev
             - name: DATABASE_HOST
-              value: "10.241.0.3"
+              value: "10.248.0.3"
             - name: DATABASE_PORT
               value: "5432"
             - name: DATABASE_NAME
@@ -491,7 +491,7 @@ spec:
               containerPort: 8080
           env:
             - name: DATABASE_HOST
-              value: "10.241.0.3"
+              value: "10.248.0.3"
             - name: DATABASE_PORT
               value: "5432"
             - name: DATABASE_NAME
@@ -567,7 +567,7 @@ spec:
               containerPort: 8080
           env:
             - name: DATABASE_HOST
-              value: "10.241.0.3"
+              value: "10.248.0.3"
             - name: DATABASE_PORT
               value: "5432"
             - name: DATABASE_NAME
