@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/order-service
-  tag: dbaeb9db5faa
+  tag: 29bb83690e85
   pullPolicy: IfNotPresent
 nameOverride: order-service
 fullnameOverride: order-service
