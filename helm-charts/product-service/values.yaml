@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/golden-path/product-service
-  tag: 7cde54516615
+  tag: 89b02a92ee15
   pullPolicy: IfNotPresent
 nameOverride: ""
 fullnameOverride: ""
