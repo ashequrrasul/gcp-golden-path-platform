@@ -172,7 +172,7 @@ resource "helm_release" "istio_ingressgateway" {
 resource "kubectl_manifest" "monitoring_extras" {
   for_each = {
     for manifest in local.monitoring_manifests :
-    "${manifest.kind}/${manifest.metadata.namespace}/${manifest.metadata.name}" => manifest
+    "${manifest.kind}/${try(manifest.metadata.namespace, "_cluster")}/${manifest.metadata.name}" => manifest
   }
 
   yaml_body = yamlencode(each.value)
@@ -181,10 +181,11 @@ resource "kubectl_manifest" "monitoring_extras" {
 }
 
 resource "kubectl_manifest" "istio_config" {
-  for_each = var.install_istio ? {
+  for_each = {
     for manifest in local.istio_manifests :
-    "${manifest.kind}/${manifest.metadata.namespace}/${manifest.metadata.name}" => manifest
-  } : {}
+    "${manifest.kind}/${try(manifest.metadata.namespace, "_cluster")}/${manifest.metadata.name}" => manifest
+    if var.install_istio
+  }
 
   yaml_body = yamlencode(each.value)
 
@@ -197,7 +198,7 @@ resource "kubectl_manifest" "istio_config" {
 resource "kubectl_manifest" "argocd_applications" {
   for_each = {
     for manifest in local.argocd_applications :
-    "${manifest.kind}/${manifest.metadata.namespace}/${manifest.metadata.name}" => manifest
+    "${manifest.kind}/${try(manifest.metadata.namespace, "_cluster")}/${manifest.metadata.name}" => manifest
   }
 
   yaml_body = yamlencode(each.value)
@@ -206,7 +207,7 @@ resource "kubectl_manifest" "argocd_applications" {
     helm_release.argocd,
     helm_release.external_secrets,
     helm_release.kube_prometheus_stack,
-    kubernetes_manifest.monitoring_extras,
-    kubernetes_manifest.istio_config,
+    kubectl_manifest.monitoring_extras,
+    kubectl_manifest.istio_config,
   ]
 }

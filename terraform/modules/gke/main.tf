@@ -12,6 +12,14 @@ resource "google_container_cluster" "this" {
   deletion_protection      = var.deletion_protection
   networking_mode          = "VPC_NATIVE"
 
+  node_config {
+    machine_type    = var.machine_type
+    disk_type       = var.disk_type
+    disk_size_gb    = var.disk_size_gb
+    service_account = var.node_service_account_email
+    oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
+  }
+
   ip_allocation_policy {
     cluster_secondary_range_name  = var.pods_range_name
     services_secondary_range_name = var.services_range_name
@@ -73,6 +81,12 @@ resource "google_container_cluster" "this" {
     managed_prometheus {
       enabled = true
     }
+  }
+
+  timeouts {
+    create = "90m"
+    update = "90m"
+    delete = "60m"
   }
 }
 
