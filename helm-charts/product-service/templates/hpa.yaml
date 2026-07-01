@@ -8,7 +8,7 @@ metadata:
     {{- include "product-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: {{ include "product-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}

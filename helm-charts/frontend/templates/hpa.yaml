@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: {{ include "frontend.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}

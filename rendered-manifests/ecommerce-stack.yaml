@@ -333,7 +333,7 @@ spec:
     app.kubernetes.io/name: order-service
     app.kubernetes.io/instance: order-service
 ---
-apiVersion: helm-charts/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ecommerce-frontend
@@ -379,7 +379,7 @@ spec:
               cpu: 250m
               memory: 256Mi
 ---
-apiVersion: helm-charts/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: product-service
@@ -458,7 +458,7 @@ spec:
               drop:
                 - ALL
 ---
-apiVersion: helm-charts/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cart-payment-service
@@ -534,7 +534,7 @@ spec:
               cpu: 750m
               memory: 768Mi
 ---
-apiVersion: helm-charts/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: order-service
@@ -615,7 +615,7 @@ metadata:
   namespace: golden-path
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: ecommerce-frontend
   minReplicas: 1
@@ -635,7 +635,7 @@ metadata:
   namespace: golden-path
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: product-service
   minReplicas: 1
@@ -655,7 +655,7 @@ metadata:
   namespace: golden-path
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: cart-payment-service
   minReplicas: 1
@@ -675,7 +675,7 @@ metadata:
   namespace: golden-path
 spec:
   scaleTargetRef:
-    apiVersion: helm-charts/v1
+    apiVersion: apps/v1
     kind: Deployment
     name: order-service
   minReplicas: 1
